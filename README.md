@@ -89,7 +89,7 @@ CI/CD Django project to work with Elastic BeanStalk (eb) and AWS CodePipeline.
     ```powershell
     eb status
     ```
-    
+
     ```
     Environment details for: django-env
     Application name: django-tutorial
@@ -98,7 +98,7 @@ CI/CD Django project to work with Elastic BeanStalk (eb) and AWS CodePipeline.
     ...
     ```
 
-10. Open the settings.py file in the ebdjango directory. Locate the ALLOWED_HOSTS setting, and then add your application's domain name that you found in the previous step to the setting's value. If you can't find this setting in the file, add it to a new line.
+10. Open the settings.py file in the ladimi directory. Locate the ALLOWED_HOSTS setting, and then add your application's domain name that you found in the previous step to the setting's value. If you can't find this setting in the file, add it to a new line.
 
     ```python
     ALLOWED_HOSTS = ['anything-xyz.elasticbeanstalk.com', 'ladimi.com']
