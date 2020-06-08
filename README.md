@@ -26,23 +26,36 @@ CI/CD Django project to work with Elastic BeanStalk (EB) and AWS CodePipeline.
 
     _Command pipenv shell will create virtual environment if it is not created. Command pienv update will install the packages contained in file [Pipfile](Pipfile)_
 
-3. [optional] If new packages are added, execute the below command from the Django project folder (i.e ladimi), instead of the root folder of the [Git](https://git-scm.com/) repository:
+3. If new packages are added, execute the below command from the Django project folder (i.e ladimi), instead of the root folder of the [Git](https://git-scm.com/) repository:
 
     ```powershell
-    pip freeze > requirements.txt
+    pipenv update
     ```
+
+    More information could be found in the [Pipenv: Python Dev Workflow for Humans Page](https://pipenv.pypa.io/en/latest/)
+
+    New Amazon Linux 2 supports pipenv, no more requirements.txt are required.
 
 4. [optional] Any configuration for the eb extension must be done in the django.config file from the .ebextensions (i.e ladimi/.ebextensions/django.config)
 
-    ```config
-    option_settings:
-    aws:elasticbeanstalk:container:python:
-        WSGIPath: ladimi.wsgi:application
+    ```yaml
+        option_settings:
+        aws:elasticbeanstalk:environment:proxy:staticfiles:
+            /static: static
+            /static/images: static/images
+        aws:elasticbeanstalk:container:python:
+            WSGIPath: ladimi.wsgi:application
+
+        container_commands:
+        collectstatic:
+            command: "$PYTHONPATH/python manage.py collectstatic --noinput"
     ```
+
+    We have to set the staticfiles folder in the EB to be able to use them, just is s3 or CDN is not being used. Also, to avoid having to run another command a [container_commands](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html) can be set to collect the statics from Django application or project.
 
 5. Basic structure should look like this:
 
-    ```
+    ```x
     ~/ladimi/
     |-- .ebextensions
     |   `-- django.config
@@ -57,8 +70,9 @@ CI/CD Django project to work with Elastic BeanStalk (EB) and AWS CodePipeline.
     ```
 
 6. Initialize the EB CLI:
+
     ```powershell
-    eb init -p python-3.7 django-tutorial
+    eb init -p python-3.7 ladimi-eb
     ```
 
 7. [optional] Configure the key pair for the EC2 instance:
@@ -69,7 +83,7 @@ CI/CD Django project to work with Elastic BeanStalk (EB) and AWS CodePipeline.
     # Then select the options as below:
     ```
 
-    ```
+    ```x
     Do you want to set up SSH for your instances?
     (y/n): y
     Select a keypair.
@@ -90,9 +104,9 @@ CI/CD Django project to work with Elastic BeanStalk (EB) and AWS CodePipeline.
     eb status
     ```
 
-    ```
-    Environment details for: django-env
-    Application name: django-tutorial
+    ```x
+    Environment details for: ladimi-env
+    Application name: ladimi-eb
     ...
     CNAME: anything-xyz.elasticbeanstalk.com
     ...
@@ -104,6 +118,7 @@ CI/CD Django project to work with Elastic BeanStalk (EB) and AWS CodePipeline.
     ALLOWED_HOSTS = ['anything-xyz.elasticbeanstalk.com', 'ladimi.com']
     ```
 
+    _If a domain is owned, then it would be easier to just set the allowed host to that domain, like in the above example_
 11. Deploy to EB with the new changes. This command will be used for any updates to the application.
 
     ```powershell
@@ -117,3 +132,6 @@ CI/CD Django project to work with Elastic BeanStalk (EB) and AWS CodePipeline.
     ```
 
 13. Set Route 53 to use your domain.
+    - Because EB will create a [load balancer](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-elb-load-balancer.html), it is strongly recommended to set the [record set](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrsets-working-with.html) to the load balancer URL, instead of the EB url.
+
+Note: _final structure should look like the below tree:_

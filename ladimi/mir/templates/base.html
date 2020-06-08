@@ -1,0 +1,14 @@
+{% load static %}
+{% spaceless %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}ladimi.com{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'mir/images/favicon.ico' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mir/style.css' %}">
+  </head>
+  <body>
+    {% block content %}{% endblock content %}
+  </body>
+</html>
+{% endspaceless %}

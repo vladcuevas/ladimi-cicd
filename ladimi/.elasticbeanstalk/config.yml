@@ -1,11 +1,16 @@
 branch-defaults:
   default:
     environment: ladimi-env
+    group_suffix: null
+environment-defaults:
+  ladimi-env:
+    branch: null
+    repository: null
 global:
-  application_name: ladimi-aws
+  application_name: ladimi-eb
   branch: null
   default_ec2_keyname: aws-eb
-  default_platform: Python 3.7
+  default_platform: Python 3.7 running on 64bit Amazon Linux 2
   default_region: us-west-2
   include_git_submodules: true
   instance_profile: null

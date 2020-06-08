@@ -25,12 +25,13 @@ SECRET_KEY = '!v1k#5um(&oz@ke9eka7i+*5@eu*h3qm(q4u$xj&+-whu0-(b_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.ladimi.com', 'ladimi.com', '127.0.0.1']
+ALLOWED_HOSTS = ['www.ladimi.com', 'ladimi.com', '127.0.0.1','localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'mir.apps.MirConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -118,3 +119,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
